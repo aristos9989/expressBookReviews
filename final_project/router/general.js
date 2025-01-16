@@ -6,8 +6,29 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req, res) => {
-    //Write your code here
-    return res.status(300).json({ message: "Yet to be implemented" });
+    const username = req.body.username;
+    const password = req.body.password;
+    users.forEach((user) => {
+        if (user["username"] === username) {
+            return res.status(208).json({ message: "User already exists. You can try logging in instead." })
+        }
+    });
+    if ((username.length > 0) & (password.length > 0)) {
+        users.push({
+            "username": username,
+            "password": password
+        });
+        return res.status(200).json({ message: "User registered successfully." });
+    }
+    else if ((username.length === 0) & (password.length === 0)) {
+        return res.status(203).json({ message: "Username and password cannot be empty." });
+    }
+    else if (username.length === 0) {
+        return res.status(203).json({ message: "Username cannot be empty." });
+    }
+    else {
+        return res.status(203).json({ message: "Password cannot be empty." });
+    }
 });
 
 // Get the book list available in the shop
@@ -27,7 +48,7 @@ public_users.get('/author/:author', function (req, res) {
     let booksToShow = {};
     for (const [key, value] of Object.entries(books)) {
         if (books[key]["author"] === author) {
-            booksToShow[key]=value;
+            booksToShow[key] = value;
         }
     };
     return res.send(JSON.stringify(booksToShow, null, 4));
@@ -39,7 +60,7 @@ public_users.get('/title/:title', function (req, res) {
     let booksToShow = {};
     for (const [key, value] of Object.entries(books)) {
         if (books[key]["title"] === title) {
-            booksToShow[key]=value;
+            booksToShow[key] = value;
         }
     };
     return res.send(JSON.stringify(booksToShow, null, 4));
