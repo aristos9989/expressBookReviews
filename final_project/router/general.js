@@ -8,26 +8,25 @@ const public_users = express.Router();
 public_users.post("/register", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    users.forEach((user) => {
-        if (user["username"] === username) {
-            return res.status(208).json({ message: "User already exists. You can try logging in instead." })
-        }
-    });
-    if ((username.length > 0) & (password.length > 0)) {
-        users.push({
-            "username": username,
-            "password": password
-        });
-        return res.status(200).json({ message: "User registered successfully." });
-    }
-    else if ((username.length === 0) & (password.length === 0)) {
+    if ((username.length === 0) & (password.length === 0)) {
         return res.status(203).json({ message: "Username and password cannot be empty." });
     }
     else if (username.length === 0) {
         return res.status(203).json({ message: "Username cannot be empty." });
     }
-    else {
+    else if (password.length === 0) {
         return res.status(203).json({ message: "Password cannot be empty." });
+    } else {
+        users.forEach((user) => {
+            if (user["username"] === username) {
+                return res.status(208).json({ message: "User already exists. You can try logging in instead." })
+            }
+        });
+        users.push({
+            "username": username,
+            "password": password
+        });
+        return res.status(200).json({ message: "User registered successfully." })
     }
 });
 
